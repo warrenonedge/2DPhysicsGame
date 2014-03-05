@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
-bool active(sf::Text text, int mousex, int mousey);
+bool active(int objx, int objy, int w, int h, int mousex, int mousey);
 
 int main()
 {
@@ -23,7 +23,9 @@ int main()
     text.setString("Start");
     text.setCharacterSize(24);
     text.setColor(sf::Color::White);
-    text.setPosition(380,500);
+    int textx = 375;
+    int texty = 450;
+    text.setPosition(textx,texty);
 
 	// Start the game loop
     while (app.isOpen())
@@ -39,7 +41,7 @@ int main()
             {
                 int mousex = event.mouseMove.x;
                 int mousey = event.mouseMove.y;
-                if (active(text,mousex,mousey))
+                if (active(textx,texty,text.getLocalBounds().width,text.getLocalBounds().height,mousex,mousey))
 
                 {
                     text.setColor(sf::Color::Red);
@@ -55,10 +57,10 @@ int main()
                 {
                     int mousex = event.mouseButton.x;
                     int mousey = event.mouseButton.y;
-                    if (active(text,mousex,mousey))
-                        printf("Button Clicked");
+                    if (active(textx,texty,text.getLocalBounds().width,text.getLocalBounds().height,mousex,mousey))
+                        printf("Button Clicked\n");
                     else
-                        printf("Button Not Clicked");
+                        printf("Button Not Clicked\n");
                 }
             }
         }
@@ -77,10 +79,10 @@ int main()
     return EXIT_SUCCESS;
 }
 
-bool active(sf::Text text, int mousex, int mousey)
+bool active(int objx, int objy, int w, int h, int mousex, int mousey)
 {
     //if(mousex > text.getPosition().x && mousex < text.getPosition().x + text.getLocalBounds().width && mousey > text.getPosition().y && mousey < text.getPosition().y + text.getLocalBounds().height)
-    if(mousex > 380 && mousex < 380 + text.getLocalBounds().width && mousey > 500 && mousey < 500 + text.getLocalBounds().height)
+    if(mousex > objx && mousex < objx + w && mousey > objy && mousey < objy + h)
     {
         return true;
     }
