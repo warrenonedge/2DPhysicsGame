@@ -51,7 +51,8 @@
 			<Add library="dxguid" />
 			<Add directory="C:/SFML-2.1/lib" />
 		</Linker>
-		<Unit filename="cb.bmp" />
+		<Unit filename="GameMainScreen.bmp" />
+		<Unit filename="arial.ttf" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
