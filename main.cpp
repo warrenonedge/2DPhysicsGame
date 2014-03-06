@@ -7,7 +7,7 @@ bool active(int objx, int objy, int w, int h, int mousex, int mousey);
 int main()
 {
     // Create the main window
-    sf::RenderWindow app(sf::VideoMode(800, 600), "SFML window");
+    sf::RenderWindow app(sf::VideoMode(1000, 600), "SFML window");
 
     // Load a sprite to display
     sf::Texture texture;
@@ -24,8 +24,8 @@ int main()
     text.setString("Start");
     text.setCharacterSize(24);
     text.setColor(sf::Color::White);
-    int textx = 375;
-    int texty = 450;
+    int textx = 500-(text.getGlobalBounds().width/2);
+    int texty = 460-(text.getGlobalBounds().height/2);
     text.setPosition(textx,texty);
 
 	// Start the game loop
