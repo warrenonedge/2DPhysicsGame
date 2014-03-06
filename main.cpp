@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include "Physics.h"
 
 bool active(int objx, int objy, int w, int h, int mousex, int mousey);
 
