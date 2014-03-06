@@ -52,6 +52,8 @@
 			<Add directory="C:/SFML-2.1/lib" />
 		</Linker>
 		<Unit filename="GameMainScreen.bmp" />
+		<Unit filename="Physics.cpp" />
+		<Unit filename="Physics.h" />
 		<Unit filename="arial.ttf" />
 		<Unit filename="main.cpp" />
 		<Extensions>
