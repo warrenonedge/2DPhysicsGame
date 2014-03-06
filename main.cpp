@@ -58,9 +58,9 @@ int main()
                     int mousex = event.mouseButton.x;
                     int mousey = event.mouseButton.y;
                     if (active(textx,texty,text.getLocalBounds().width,text.getLocalBounds().height,mousex,mousey))
-                        printf("Button Clicked\n");
+                        printf("Button Clicked \n");
                     else
-                        printf("Button Not Clicked\n");
+                        printf("Button Not Clicked \n");
                 }
             }
         }
