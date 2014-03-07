@@ -1,8 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include <string>
+#include <sstream>
 #include "Physics.h"
 
+
 bool active(int objx, int objy, int w, int h, int mousex, int mousey);
+std::string number_to_string(int number);
 
 int main()
 {
@@ -31,24 +35,36 @@ int main()
     sf::CircleShape ball(37);
     ball.setPosition(87,476);
     ball.setFillColor(sf::Color::Red);
-    sf::Text massText("Mass:",font,20);
+
+    sf::RectangleShape line;
+    line.setPosition(87+ball.getRadius(),476+ball.getRadius());
+    line.setOutlineThickness(0);
+    line.setOutlineColor(sf::Color::White);
+    line.setSize(sf::Vector2f(150,1));
+    line.setFillColor(sf::Color::White);
+
+    sf::Text massText("Mass: 1",font,20);
     massText.setColor(sf::Color::White);
-    massText.setPosition(62,225);
+    massText.setPosition(10,225);
 
-    sf::Text velocityText("Velocity:",font,20);
+    sf::Text velocityText("Velocity: 1",font,20);
     velocityText.setColor(sf::Color::White);
-    velocityText.setPosition(62,300);
+    velocityText.setPosition(10,300);
 
-    sf::Text angleText("Angle:",font,20);
+    sf::Text angleText("Angle: 0°",font,20);
     angleText.setColor(sf::Color::White);
-    angleText.setPosition(62,375);
+    angleText.setPosition(10,375);
 
     sf::Text replayText("Replay",font,20);
     replayText.setColor(sf::Color::White);
     replayText.setStyle(sf::Text::Underlined);
-    int replayx = 62;
-    int replayy = 75;
+    int replayx = 10;
+    int replayy = 50;
     replayText.setPosition(replayx,replayy);
+
+    int mass = 1;
+    int velocity = 1;
+    int angle = 0;
     //Game Screen Objects End
 //-----------------------------------------------------------------
     bool mainScreen = true;
@@ -87,6 +103,7 @@ int main()
                         {
                             mainScreen = false;
                             replayText.setColor(sf::Color::White);
+                            printf("\n ONLY ONE KEY AT A TIME \n (, or .) \t   to -/+ Mass \n (Left or Right)   to -/+ Velocity \n (Up or Down)      to -/+ Angle(degree)");
                         }
                     }
                 }
@@ -101,6 +118,10 @@ int main()
         }
         else //Game Screen Display
         {
+            sf::Text level("Level 1",font,24);
+            level.setPosition(10,0);
+            level.setColor(sf::Color::White);
+            level.setStyle(sf::Text::Bold);
 
             sf::Event event;
             while (app.pollEvent(event))
@@ -133,8 +154,67 @@ int main()
                         }
                     }
                 }
+                if (event.type == sf::Event::KeyPressed)
+                {
+                    if (event.key.code == sf::Keyboard::Comma)
+                    {
+                        if (mass > 1)
+                            mass-=1;
+                        else
+                            mass = 1;
+                    }
+                    else if (event.key.code == sf::Keyboard::Period)
+                    {
+                        if (mass < 50)
+                        {
+                            mass+=1;
+                        }
+                        else
+                            mass = 50;
+                    }
+                    else if (event.key.code == sf::Keyboard::Left)
+                    {
+                        if (velocity > 1)
+                            velocity-=1;
+                        else
+                            velocity = 1;
+                    }
+                    else if (event.key.code == sf::Keyboard::Right)
+                    {
+                        if (velocity < 50)
+                        {
+                            velocity+=1;
+                        }
+                        else
+                            velocity = 50;
+                    }
+                    else if (event.key.code == sf::Keyboard::Down)
+                    {
+                        line.rotate(angle);
+                        if (angle > 0)
+                            angle-=1;
+                        else
+                            angle = 0;
+                    }
+                    else if (event.key.code == sf::Keyboard::Up)
+                    {
+                        line.rotate(angle);
+                        if (angle < 45)
+                        {
+                            angle+=1;
+                        }
+                        else
+                            angle = 45;
+                    }
+                    massText.setString("Mass: " + number_to_string(mass));
+                    velocityText.setString("Velocity: " + number_to_string(velocity));
+                    angleText.setString("Angle: " + number_to_string(angle) + "°");
+                    line.rotate((-1)*angle);
+                }
             }
             app.clear();
+            app.draw(level);
+            app.draw(line);
             app.draw(ball);
             app.draw(massText);
             app.draw(velocityText);
@@ -157,4 +237,9 @@ bool active(int objx, int objy, int w, int h, int mousex, int mousey)
     }
 
     return false;
+}
+
+std::string number_to_string(int number)
+{
+	return dynamic_cast<std::stringstream *> (&(std::stringstream() << number))->str();
 }
