@@ -48,6 +48,32 @@ int main()
     line.setSize(sf::Vector2f(100,1));
     line.setFillColor(sf::Color::White);
 
+    sf::RectangleShape bottom;
+    bottom.setPosition(0,476+(ball.getRadius()*2));
+    bottom.setOutlineThickness(0);
+    bottom.setOutlineColor(sf::Color::White);
+    bottom.setSize(sf::Vector2f(1000,1));
+    bottom.setFillColor(sf::Color::White);
+
+    sf::RectangleShape rectLeft;
+    rectLeft.setPosition(750,412);
+    rectLeft.setSize(sf::Vector2f(62,(476+(ball.getRadius()*2)-412)));
+    rectLeft.setFillColor(sf::Color::Blue);
+
+    sf::RectangleShape rectRight;
+    rectRight.setPosition(875,412);
+    rectRight.setSize(sf::Vector2f(62,(476+(ball.getRadius()*2)-412)));
+    rectRight.setFillColor(sf::Color::Cyan);
+
+    sf::RectangleShape rectTop;
+    rectTop.setPosition(750,355);
+    rectTop.setSize(sf::Vector2f(187,57));
+    rectTop.setFillColor(sf::Color::Green);
+
+    sf::CircleShape triangleTop(80,3);
+    triangleTop.setPosition(765,235);
+    triangleTop.setFillColor(sf::Color::Magenta);
+
     sf::Text massText("Mass: "+number_to_string(mass),font,20);
     massText.setColor(sf::Color::White);
     massText.setPosition(10,225);
@@ -223,8 +249,13 @@ int main()
             }
             app.clear();
             app.draw(level);
+            app.draw(bottom);
             app.draw(line);
             app.draw(ball);
+            app.draw(rectLeft);
+            app.draw(rectRight);
+            app.draw(rectTop);
+            app.draw(triangleTop);
             app.draw(massText);
             app.draw(velocityText);
             app.draw(angleText);
