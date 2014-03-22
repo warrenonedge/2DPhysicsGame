@@ -37,7 +37,7 @@ int main()
     int angle = 0;
     int score = 0;
 
-    sf::CircleShape ball(37);
+    sf::CircleShape ball(20);
     ball.setPosition(87,476);
     ball.setFillColor(sf::Color::Red);
 
@@ -56,22 +56,22 @@ int main()
     bottom.setFillColor(sf::Color::White);
 
     sf::RectangleShape rectLeft;
-    rectLeft.setPosition(750,412);
-    rectLeft.setSize(sf::Vector2f(62,(476+(ball.getRadius()*2)-412)));
+    rectLeft.setPosition(650,412);
+    rectLeft.setSize(sf::Vector2f(50,(476+(ball.getRadius()*2)-412)));
     rectLeft.setFillColor(sf::Color::Blue);
 
     sf::RectangleShape rectRight;
-    rectRight.setPosition(875,412);
-    rectRight.setSize(sf::Vector2f(62,(476+(ball.getRadius()*2)-412)));
+    rectRight.setPosition(775,412);
+    rectRight.setSize(sf::Vector2f(50,(476+(ball.getRadius()*2)-412)));
     rectRight.setFillColor(sf::Color::Cyan);
 
     sf::RectangleShape rectTop;
-    rectTop.setPosition(750,355);
-    rectTop.setSize(sf::Vector2f(187,57));
+    rectTop.setPosition(650,355);
+    rectTop.setSize(sf::Vector2f(175,57));
     rectTop.setFillColor(sf::Color::Green);
 
-    sf::CircleShape triangleTop(80,3);
-    triangleTop.setPosition(765,235);
+    sf::CircleShape triangleTop(60,3);
+    triangleTop.setPosition(650+(175/2-5)-(triangleTop.getLocalBounds().width/2),355-(triangleTop.getLocalBounds().height));
     triangleTop.setFillColor(sf::Color::Magenta);
 
     sf::Text massText("Mass: "+number_to_string(mass),font,20);
