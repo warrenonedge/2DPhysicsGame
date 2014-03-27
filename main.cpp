@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include "Physics.h"
 
 
@@ -10,14 +11,18 @@ std::string number_to_string(int number);
 
 int main()
 {
+    int w = 1000;
+    int h = 600;
     // Create the main window
-    sf::RenderWindow app(sf::VideoMode(1000, 600), "SFML window");
+    sf::RenderWindow app(sf::VideoMode(w,h), "SFML window");
 //-----------------------------------------------------------------
     //Main Screen Start Objects
     sf::Texture texture;
     if (!texture.loadFromFile("GameMainScreen.bmp"))
         return EXIT_FAILURE;
     sf::Sprite sprite(texture);
+    sprite.setScale(w/sprite.getGlobalBounds().width,h/sprite.getGlobalBounds().height);
+    sprite.setPosition(w/2-(sprite.getGlobalBounds().width/2),h/2-(sprite.getGlobalBounds().height/2));
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
     {
@@ -26,9 +31,7 @@ int main()
     sf::Text startText("Start",font,24);
     startText.setColor(sf::Color::White);
     startText.setStyle(sf::Text::Underlined);
-    int startTextx = 500-(startText.getGlobalBounds().width/2);
-    int startTexty = 460-(startText.getGlobalBounds().height/2);
-    startText.setPosition(startTextx,startTexty);
+    startText.setPosition(w/2-(startText.getGlobalBounds().width/2),(3*h/4)-(startText.getGlobalBounds().height/2));
     //Main Screen Objects End
 //-----------------------------------------------------------------
     //Game Screen Objects Start
@@ -37,64 +40,71 @@ int main()
     int angle = 0;
     int score = 0;
 
-    sf::CircleShape ball(20);
-    ball.setPosition(87,476);
+    sf::CircleShape ball((20.0/600)*h);
+    ball.setPosition(87,h-100);
     ball.setFillColor(sf::Color::Red);
 
     sf::RectangleShape line;
-    line.setPosition(87+ball.getRadius(),476+ball.getRadius());
+    line.setPosition(ball.getPosition().x+ball.getRadius(),ball.getPosition().y+ball.getRadius());
     line.setOutlineThickness(0);
     line.setOutlineColor(sf::Color::White);
     line.setSize(sf::Vector2f(100,1));
     line.setFillColor(sf::Color::White);
 
     sf::RectangleShape bottom;
-    bottom.setPosition(0,476+(ball.getRadius()*2));
+    bottom.setPosition(0,ball.getPosition().y+(ball.getRadius()*2));
     bottom.setOutlineThickness(0);
     bottom.setOutlineColor(sf::Color::White);
-    bottom.setSize(sf::Vector2f(1000,1));
+    bottom.setSize(sf::Vector2f(w,1));
     bottom.setFillColor(sf::Color::White);
 
     sf::RectangleShape rectLeft;
-    rectLeft.setPosition(650,412);
-    rectLeft.setSize(sf::Vector2f(50,(476+(ball.getRadius()*2)-412)));
+    rectLeft.setPosition(2.5*w/4,2.75*h/4);
+    rectLeft.setSize(sf::Vector2f(50,(ball.getPosition().y+(ball.getRadius()*2)-rectLeft.getPosition().y)));
     rectLeft.setFillColor(sf::Color::Blue);
 
     sf::RectangleShape rectRight;
-    rectRight.setPosition(775,412);
-    rectRight.setSize(sf::Vector2f(50,(476+(ball.getRadius()*2)-412)));
-    rectRight.setFillColor(sf::Color::Cyan);
+    rectRight.setPosition(rectLeft.getPosition().x+125,rectLeft.getPosition().y);
+    rectRight.setSize(rectLeft.getSize());
+    rectRight.setFillColor(sf::Color::Blue);
 
     sf::RectangleShape rectTop;
-    rectTop.setPosition(650,355);
-    rectTop.setSize(sf::Vector2f(175,57));
+    rectTop.setPosition(rectLeft.getPosition().x,rectLeft.getPosition().y-rectLeft.getSize().x);
+    rectTop.setSize(sf::Vector2f((3.0/2*rectLeft.getSize().x)+(2*rectLeft.getGlobalBounds().width),rectLeft.getSize().x));
     rectTop.setFillColor(sf::Color::Green);
 
-    sf::CircleShape triangleTop(60,3);
-    triangleTop.setPosition(650+(175/2-5)-(triangleTop.getLocalBounds().width/2),355-(triangleTop.getLocalBounds().height));
-    triangleTop.setFillColor(sf::Color::Magenta);
+    sf::CircleShape triangleTop1(rectTop.getGlobalBounds().width/4,3);
+    triangleTop1.setPosition(rectLeft.getPosition().x,rectTop.getPosition().y-triangleTop1.getGlobalBounds().height);
+    triangleTop1.setFillColor(sf::Color::Magenta);
+
+    sf::CircleShape triangleTop2(rectTop.getGlobalBounds().width/4,3);
+    triangleTop2.setPosition(rectRight.getPosition().x-triangleTop2.getGlobalBounds().width/2.0,rectTop.getPosition().y-triangleTop2.getGlobalBounds().height);
+    triangleTop2.setFillColor(sf::Color::Magenta);
+
+    sf::Text level("Level 1",font,24);
+    level.setPosition(10,0);
+    level.setColor(sf::Color::White);
+    level.setStyle(sf::Text::Bold);
 
     sf::Text massText("Mass: "+number_to_string(mass),font,20);
     massText.setColor(sf::Color::White);
-    massText.setPosition(10,225);
+    massText.setPosition(level.getPosition().x,(225/600.0)*h);
 
     sf::Text velocityText("Velocity: "+number_to_string(velocity),font,20);
     velocityText.setColor(sf::Color::White);
-    velocityText.setPosition(10,300);
+    velocityText.setPosition(massText.getPosition().x,massText.getPosition().y+75);
 
     sf::Text angleText("Angle: "+number_to_string(angle)+"°",font,20);
     angleText.setColor(sf::Color::White);
-    angleText.setPosition(10,375);
+    angleText.setPosition(velocityText.getPosition().x,velocityText.getPosition().y+75);
 
     sf::Text replayText("Replay",font,20);
     replayText.setColor(sf::Color::White);
     replayText.setStyle(sf::Text::Underlined);
-    int replayx = 10;
-    int replayy = 50;
-    replayText.setPosition(replayx,replayy);
+    replayText.setPosition(massText.getPosition().x,50);
 
     sf::Text scoreText("Score: "+number_to_string(score),font,24);
-    scoreText.setPosition(500-(scoreText.getLocalBounds().width/2),50);
+    scoreText.setPosition(w/2.0-(scoreText.getLocalBounds().width/2),50);
     scoreText.setColor(sf::Color::White);
 
     //Game Screen Objects End
@@ -116,7 +126,7 @@ int main()
                 {
                     int mousex = event.mouseMove.x;
                     int mousey = event.mouseMove.y;
-                    if (active(startTextx,startTexty,startText.getLocalBounds().width,startText.getLocalBounds().height,mousex,mousey))
+                    if (active(startText.getPosition().x,startText.getPosition().y,startText.getLocalBounds().width,startText.getLocalBounds().height,mousex,mousey))
                     {
                         startText.setColor(sf::Color::Red);
                     }
@@ -131,7 +141,7 @@ int main()
                     {
                         int mousex = event.mouseButton.x;
                         int mousey = event.mouseButton.y;
-                        if (active(startTextx,startTexty,startText.getLocalBounds().width,startText.getLocalBounds().height,mousex,mousey))
+                        if (active(startText.getPosition().x,startText.getPosition().y,startText.getLocalBounds().width,startText.getLocalBounds().height,mousex,mousey))
                         {
                             mainScreen = false;
                             replayText.setColor(sf::Color::White);
@@ -150,11 +160,6 @@ int main()
         }
         else //Game Screen Display
         {
-            sf::Text level("Level 1",font,24);
-            level.setPosition(10,0);
-            level.setColor(sf::Color::White);
-            level.setStyle(sf::Text::Bold);
-
             sf::Event event;
             while (app.pollEvent(event))
             {
@@ -165,7 +170,7 @@ int main()
                 {
                     int mousex = event.mouseMove.x;
                     int mousey = event.mouseMove.y;
-                    if (active(replayx,replayy,replayText.getLocalBounds().width,replayText.getLocalBounds().height,mousex,mousey))
+                    if (active(replayText.getPosition().x,replayText.getPosition().y,replayText.getLocalBounds().width,replayText.getLocalBounds().height,mousex,mousey))
                     {
                         replayText.setColor(sf::Color::Red);
                     }
@@ -180,7 +185,7 @@ int main()
                     {
                         int mousex = event.mouseButton.x;
                         int mousey = event.mouseButton.y;
-                        if (active(replayx,replayy,replayText.getLocalBounds().width,replayText.getLocalBounds().height,mousex,mousey)){
+                        if (active(replayText.getPosition().x,replayText.getPosition().y,replayText.getLocalBounds().width,replayText.getLocalBounds().height,mousex,mousey)){
                             mainScreen = true;
                             startText.setColor(sf::Color::White);
                         }
@@ -255,7 +260,8 @@ int main()
             app.draw(rectLeft);
             app.draw(rectRight);
             app.draw(rectTop);
-            app.draw(triangleTop);
+            app.draw(triangleTop1);
+            app.draw(triangleTop2);
             app.draw(massText);
             app.draw(velocityText);
             app.draw(angleText);
