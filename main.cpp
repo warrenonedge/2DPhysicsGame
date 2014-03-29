@@ -11,8 +11,8 @@ std::string number_to_string(int number);
 
 int main()
 {
-    int w = 1000;
-    int h = 600;
+    int w = 1500;
+    int h = 800;
     // Create the main window
     sf::RenderWindow app(sf::VideoMode(w,h), "SFML window");
 //-----------------------------------------------------------------
@@ -28,7 +28,7 @@ int main()
     {
         return EXIT_FAILURE; // error...
     }
-    sf::Text startText("Start",font,24);
+    sf::Text startText("Start",font,(w*1.0/h)*(72/5.0));
     startText.setColor(sf::Color::White);
     startText.setStyle(sf::Text::Underlined);
     startText.setPosition(w/2-(startText.getGlobalBounds().width/2),(3*h/4)-(startText.getGlobalBounds().height/2));
@@ -81,29 +81,29 @@ int main()
     triangleTop2.setPosition(rectRight.getPosition().x-triangleTop2.getGlobalBounds().width/2.0,rectTop.getPosition().y-triangleTop2.getGlobalBounds().height);
     triangleTop2.setFillColor(sf::Color::Magenta);
 
-    sf::Text level("Level 1",font,24);
+    sf::Text level("Level 1",font,(w*1.0/h)*(72/5.0));
     level.setPosition(10,0);
     level.setColor(sf::Color::White);
     level.setStyle(sf::Text::Bold);
 
-    sf::Text massText("Mass: "+number_to_string(mass),font,20);
+    sf::Text massText("Mass: "+number_to_string(mass),font,(w*1.0/h)*(12.0));
     massText.setColor(sf::Color::White);
     massText.setPosition(level.getPosition().x,(225/600.0)*h);
 
-    sf::Text velocityText("Velocity: "+number_to_string(velocity),font,20);
+    sf::Text velocityText("Velocity: "+number_to_string(velocity),font,(w*1.0/h)*(12.0));
     velocityText.setColor(sf::Color::White);
     velocityText.setPosition(massText.getPosition().x,massText.getPosition().y+75);
 
-    sf::Text angleText("Angle: "+number_to_string(angle)+"°",font,20);
+    sf::Text angleText("Angle: "+number_to_string(angle)+"°",font,(w*1.0/h)*(12.0));
     angleText.setColor(sf::Color::White);
     angleText.setPosition(velocityText.getPosition().x,velocityText.getPosition().y+75);
 
-    sf::Text replayText("Replay",font,20);
+    sf::Text replayText("Replay",font,(w*1.0/h)*(12.0));
     replayText.setColor(sf::Color::White);
     replayText.setStyle(sf::Text::Underlined);
     replayText.setPosition(massText.getPosition().x,50);
 
-    sf::Text scoreText("Score: "+number_to_string(score),font,24);
+    sf::Text scoreText("Score: "+number_to_string(score),font,(w*1.0/h)*(72/5.0));
     scoreText.setPosition(w/2.0-(scoreText.getLocalBounds().width/2),50);
     scoreText.setColor(sf::Color::White);
 
