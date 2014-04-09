@@ -62,10 +62,8 @@ double World::getGforce() {
 }
 
 
-Wobject::Wobject(double centerx,double centery,vector<Point> points,double mass,double xaccel,double yaccel)
+Wobject::Wobject(vector<Point> points,double mass,double xaccel,double yaccel)
 {
-    this->centerx = centerx;
-    this->centery = centery;
     this->mass = mass;
     this->xaccel = xaccel;
     this->yaccel = yaccel;
@@ -117,7 +115,7 @@ double Wobject::getMass()
     return this->mass;
 }
 
-double* Wobject::getPoints()
+vector<Point> Wobject::getPoints()
 {
     return this->points;
 }

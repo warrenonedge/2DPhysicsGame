@@ -37,7 +37,7 @@ class Wobject {
         double centerx,centery,mass,xaccel,yaccel;
         vector<Point> points;
     public:
-        Wobject(double,double,vector<Point>,double,double,double);
+        Wobject(vector<Point>,double,double,double);
         void setCenterX(double);
         void setCenterY(double);
         void setMass(double);
@@ -48,7 +48,7 @@ class Wobject {
         double getCenterX(void);
         double getCenterY(void);
         double getMass(void);
-        double* getPoints(void);
+        vector<Point> getPoints(void);
         double getXAccel(void);
         double getYAccel(void);
 };
