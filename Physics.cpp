@@ -1,4 +1,5 @@
 #include "Physics.h"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 using namespace std;
@@ -68,21 +69,11 @@ Wobject::Wobject(vector<Point> points,double mass,double xaccel,double yaccel)
     this->xaccel = xaccel;
     this->yaccel = yaccel;
 
-    for(int i=0;i<points.size();i++)
+    for(unsigned int i=0;i<points.size();i++)
     {
         Point p = Point(points[i].getX(),points[i].getY());
-        this.points.push_back(p);
+        this->points.push_back(p);
     }
-}
-
-void Wobject::setCenterX(double newcenterx)
-{
-    this->centerx = newcenterx;
-}
-
-void Wobject::setCenterY(double newcentery)
-{
-    this->centery = newcentery;
 }
 
 void Wobject::setMass(double newmass)
@@ -98,16 +89,6 @@ void Wobject::setXAccel(double newxvel)
 void Wobject::setYAccel(double newyvel)
 {
     this->yaccel = newyvel;
-}
-
-double Wobject::getCenterX()
-{
-    return this->centerx;
-}
-
-double Wobject::getCenterY()
-{
-    return this->centery;
 }
 
 double Wobject::getMass()

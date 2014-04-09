@@ -1,6 +1,9 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 #include <vector>
+#include<stdio.h>
+
+using namespace std;
 
 class Point {
     private:
@@ -19,7 +22,7 @@ class Point {
 class World {
     private:
         double width,height,gforce;
-        // objects -> need a data structure to store world objects ?vector of objects?
+
     public:
         World(double,double,double);
         void setWidth(double);
@@ -34,19 +37,15 @@ class World {
 
 class Wobject {
     private:
-        double centerx,centery,mass,xaccel,yaccel;
+        double mass,xaccel,yaccel;
         vector<Point> points;
     public:
-        Wobject(vector<Point>,double,double,double);
-        void setCenterX(double);
-        void setCenterY(double);
+        Wobject(vector<Point> points,double,double,double);
         void setMass(double);
         void setXAccel(double);
         void setYAccel(double);
 
 
-        double getCenterX(void);
-        double getCenterY(void);
         double getMass(void);
         vector<Point> getPoints(void);
         double getXAccel(void);
