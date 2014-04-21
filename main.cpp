@@ -80,14 +80,6 @@ int main()
     rectTop.setSize(sf::Vector2f((3.0/2*rectLeft.getSize().x)+(2*rectLeft.getGlobalBounds().width),rectLeft.getSize().x));
     rectTop.setFillColor(sf::Color::Green);
 
-    sf::CircleShape triangleTop1(rectTop.getGlobalBounds().width/4,3);
-    triangleTop1.setPosition(rectLeft.getPosition().x,rectTop.getPosition().y-triangleTop1.getGlobalBounds().height);
-    triangleTop1.setFillColor(sf::Color::Magenta);
-
-    sf::CircleShape triangleTop2(rectTop.getGlobalBounds().width/4,3);
-    triangleTop2.setPosition(rectRight.getPosition().x-triangleTop2.getGlobalBounds().width/2.0,rectTop.getPosition().y-triangleTop2.getGlobalBounds().height);
-    triangleTop2.setFillColor(sf::Color::Magenta);
-
     sf::Text level("Level 1",font,(w*1.0/h)*(72/5.0));
     level.setPosition(10,0);
     level.setColor(sf::Color::White);
@@ -119,13 +111,13 @@ int main()
     //Physics Engine initialization
 
     World world = World(w,h,10);
-    Wrect rectL = Wrect(&rectLeft,.11,0,0);
+    Wrect rectL = Wrect(&rectLeft,.011,0,0);
     world.addRectObject(&rectL);
 
-    Wrect rectR = Wrect(&rectRight,.12,0,0);
+    Wrect rectR = Wrect(&rectRight,.012,0,0);
     world.addRectObject(&rectR);
 
-    Wrect rectT = Wrect(&rectTop,.134,0,0);
+    Wrect rectT = Wrect(&rectTop,.0134,0,0);
     world.addRectObject(&rectT);
 
     //Physics Engine Initialization End
@@ -138,7 +130,6 @@ int main()
     double objMass;
     double objxvelo;
     double objyvelo;
-    cout << world.getRectObjects()[0]->getWidth() << endl;
 
 	// Start the game loop
     while (app.isOpen())
@@ -315,8 +306,6 @@ int main()
             app.draw(rectLeft);
             app.draw(rectRight);
             app.draw(rectTop);
-            app.draw(triangleTop1);
-            app.draw(triangleTop2);
             app.draw(massText);
             app.draw(velocityText);
             app.draw(angleText);
