@@ -85,6 +85,20 @@ Wrect::Wrect(sf::RectangleShape* shape,double mass,double xvelo,double yvelo)
     this->xvelo = xvelo;
     this->yvelo = yvelo;
     this->shape = shape;
+    this->width = shape->getSize().x;
+    this->height = shape->getSize().y;
+    Point p = Point(abs((this->width/2)-getCenterX()),abs((this->height/2)-getCenterY())); //topLeftPoint
+    points.push_back(&p);
+
+    p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)-getCenterY()));  //topRightPoint
+    points.push_back(&p);
+
+    p = Point(abs((this->width/2)-getCenterX()),abs((this->height/2)+getCenterY())); //botLeftPoint
+    points.push_back(&p);
+
+    p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)+getCenterY()));//botRightPoint
+    points.push_back(&p);
+
 }
 
 double Wrect::getCenterX() {
@@ -100,5 +114,48 @@ void Wrect::setPosition(double newx, double newy) {
 }
 
 void Wrect::Move(double dx,double dy) {
+    for (int i=0;i<4;i++)
+    {
+        this->points[i]->Move(dx,dy);
+    }
+
     this->shape->move(dx,dy);
+}
+
+double Wrect::getWidth() {
+    return this->width;
+}
+
+double Wrect::getHeight() {
+    return this->height;
+}
+
+vector<Point*> Wrect::getPoints() {
+    return this->points;
+}
+
+Point::Point(double x,double y) {
+    this->x = x;
+    this->y = y;
+}
+
+void Point::setX(double newx) {
+    this->x = newx;
+}
+
+void Point::setY(double newy) {
+    this->y = newy;
+}
+
+void Point::Move(double dx,double dy) {
+    this->x += dx;
+    this->y += dy;
+}
+
+double Point::getX() {
+    return this->x;
+}
+
+double Point::getY() {
+    return this->y;
 }

@@ -7,14 +7,19 @@
 
 using namespace std;
 
+//------Extra Functions--------------
+
+
+//------Extra Functions End----------
+
 
 bool active(int objx, int objy, int w, int h, int mousex, int mousey);
 std::string number_to_string(int number);
 
 int main()
 {
-    int w = 1500;
-    int h = 800;
+    int w = 1000;
+    int h = 600;
     // Create the main window
     sf::RenderWindow app(sf::VideoMode(w,h), "SFML window");
 //-----------------------------------------------------------------
@@ -133,8 +138,7 @@ int main()
     double objMass;
     double objxvelo;
     double objyvelo;
-
-
+    cout << world.getRectObjects()[0]->getWidth() << endl;
 
 	// Start the game loop
     while (app.isOpen())

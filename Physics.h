@@ -6,6 +6,21 @@
 
 using namespace std;
 
+class Point {
+    private:
+        double x,y;
+    public:
+        Point(double,double);
+        double getX(void);
+        double getY(void);
+
+        void Move(double,double);
+
+        void setX(double);
+        void setY(double);
+};
+
+
 class Wshape {
     protected:
         double mass,xvelo,yvelo;
@@ -23,6 +38,8 @@ class Wshape {
 class Wrect : public Wshape {
     private:
         sf::RectangleShape* shape;
+        vector<Point*> points;
+        double width, height;
 
     public:
         Wrect(sf::RectangleShape*,double,double,double);
@@ -32,6 +49,10 @@ class Wrect : public Wshape {
 
         double getCenterX(void);
         double getCenterY(void);
+        double getWidth(void);
+        double getHeight(void);
+        vector<Point*> getPoints(void);
+
 };
 
 
@@ -57,7 +78,6 @@ class World {
         double getGforce(void);
 
 };
-
 
 
 #endif // PHYSICS_H
