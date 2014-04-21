@@ -4,38 +4,30 @@
 
 using namespace std;
 
-Point::Point(double x, double y) {
-    this->x = x;
-    this->y = y;
-}
-
-void Point::setX(double newx) {
-    this->x = newx;
-}
-
-void Point::setY(double newy) {
-    this->y = newy;
-}
-
-void Point::move(double dx, double dy) {
-    this->x += dx;
-    this->y += dy;
-}
-
-double Point::getX() {
-    return this->x;
-}
-
-double Point::getY() {
-    return this->y;
-}
-
 
 World::World(double w, double h, double gf)
 {
     this->width = w;
     this->height = h;
     this->gforce = gf;
+    this->clock.restart();
+}
+
+int World::getElapsedTime() {
+    sf::Time time = this->clock.getElapsedTime();
+    return time.asMilliseconds();
+}
+
+void World::resetClock() {
+    this->clock.restart();
+}
+
+void World::addRectObject(Wrect* newobject) {
+    this->rectObjects.push_back(newobject);
+}
+
+vector<Wrect*> World::getRectObjects() {
+    return this->rectObjects;
 }
 
 void World::setWidth(double w) {
@@ -62,51 +54,51 @@ double World::getGforce() {
     return this->gforce;
 }
 
-
-Wobject::Wobject(vector<Point> points,double mass,double xaccel,double yaccel)
-{
-    this->mass = mass;
-    this->xaccel = xaccel;
-    this->yaccel = yaccel;
-
-    for(unsigned int i=0;i<points.size();i++)
-    {
-        Point p = Point(points[i].getX(),points[i].getY());
-        this->points.push_back(p);
-    }
-}
-
-void Wobject::setMass(double newmass)
-{
-    this->mass = newmass;
-}
-
-void Wobject::setXAccel(double newxvel)
-{
-    this->xaccel = newxvel;
-}
-
-void Wobject::setYAccel(double newyvel)
-{
-    this->yaccel = newyvel;
-}
-
-double Wobject::getMass()
-{
+double Wshape::getMass() {
     return this->mass;
 }
 
-vector<Point> Wobject::getPoints()
-{
-    return this->points;
+void Wshape::setMass(double newmass) {
+    this->mass = newmass;
 }
 
-double Wobject::getXAccel()
-{
-    return this->xaccel;
+void Wshape::setXvelocity(double newXvelo) {
+    this->xvelo = newXvelo;
 }
 
-double Wobject::getYAccel()
+void Wshape::setYvelocity(double newYvelo) {
+    this->yvelo = newYvelo;
+}
+
+double Wshape::getXvelocity() {
+    return this->xvelo;
+}
+
+double Wshape::getYvelocity() {
+    return this->yvelo;
+}
+
+
+Wrect::Wrect(sf::RectangleShape* shape,double mass,double xvelo,double yvelo)
 {
-    return this->yaccel;
+    this->mass = mass;
+    this->xvelo = xvelo;
+    this->yvelo = yvelo;
+    this->shape = shape;
+}
+
+double Wrect::getCenterX() {
+    return this->shape->getPosition().x;
+}
+
+double Wrect::getCenterY() {
+    return this->shape->getPosition().y;
+}
+
+void Wrect::setPosition(double newx, double newy) {
+    this->shape->setPosition(newx, newy);
+}
+
+void Wrect::Move(double dx,double dy) {
+    this->shape->move(dx,dy);
 }

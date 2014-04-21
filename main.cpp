@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Physics.h"
 
+using namespace std;
+
 
 bool active(int objx, int objy, int w, int h, int mousex, int mousey);
 std::string number_to_string(int number);
@@ -109,12 +111,61 @@ int main()
 
     //Game Screen Objects End
 //-----------------------------------------------------------------
+    //Physics Engine initialization
+
+    World world = World(w,h,10);
+    Wrect rectL = Wrect(&rectLeft,.11,0,0);
+    world.addRectObject(&rectL);
+
+    Wrect rectR = Wrect(&rectRight,.12,0,0);
+    world.addRectObject(&rectR);
+
+    Wrect rectT = Wrect(&rectTop,.134,0,0);
+    world.addRectObject(&rectT);
+
+    //Physics Engine Initialization End
+//-----------------------------------------------------------------
+
+
+
     bool mainScreen = true;
+    double fps = 60;
+    double objMass;
+    double objxvelo;
+    double objyvelo;
+
+
+
 	// Start the game loop
     while (app.isOpen())
     {
+            //Execute Physics Engine
+            if (world.getElapsedTime() > 1000/fps)
+            {
+                for (unsigned int i=0;i<world.getRectObjects().size();i++)
+                {
+                    objMass = world.getRectObjects()[i]->getMass();
+                    objyvelo = world.getRectObjects()[i]->getYvelocity();
+                    world.getRectObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
+                }
+
+                for (unsigned int i=0;i<world.getRectObjects().size();i++)
+                {
+                    objxvelo = world.getRectObjects()[i]->getXvelocity();
+                    objyvelo = world.getRectObjects()[i]->getYvelocity();
+
+                    world.getRectObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
+                }
+
+                world.resetClock();
+            }
+
+            //Execute Physics Engine End
+            //-----------------------------------------------------------------
+
         if (mainScreen == true) //Main Screen Display
         {
+
             // Process events
             sf::Event event;
             while (app.pollEvent(event))

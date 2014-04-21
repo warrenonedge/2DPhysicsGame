@@ -2,32 +2,55 @@
 #define PHYSICS_H
 #include <vector>
 #include<stdio.h>
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
-class Point {
-    private:
-        double x, y;
+class Wshape {
+    protected:
+        double mass,xvelo,yvelo;
+
     public:
-        Point(double x, double y);
-        void setX(double newx);
-        void setY(double newy);
-        void move(double dx, double dy);
+        void setMass(double);
+        void setXvelocity(double);
+        void setYvelocity(double);
 
-        double getX(void);
-        double getY(void);
-
+        double getMass(void);
+        double getXvelocity(void);
+        double getYvelocity(void);
 };
+
+class Wrect : public Wshape {
+    private:
+        sf::RectangleShape* shape;
+
+    public:
+        Wrect(sf::RectangleShape*,double,double,double);
+
+        void setPosition(double,double);
+        void Move(double,double);
+
+        double getCenterX(void);
+        double getCenterY(void);
+};
+
 
 class World {
     private:
         double width,height,gforce;
+        sf::Clock clock;
+        vector<Wrect*> rectObjects;
 
     public:
         World(double,double,double);
         void setWidth(double);
         void setHeight(double);
         void setGforce(double);
+        void resetClock(void);
+
+        int getElapsedTime(void);
+        void addRectObject(Wrect*);
+        vector<Wrect*> getRectObjects(void);
 
         double getWidth(void);
         double getHeight(void);
@@ -35,21 +58,6 @@ class World {
 
 };
 
-class Wobject {
-    private:
-        double mass,xaccel,yaccel;
-        vector<Point> points;
-    public:
-        Wobject(vector<Point> points,double,double,double);
-        void setMass(double);
-        void setXAccel(double);
-        void setYAccel(double);
 
-
-        double getMass(void);
-        vector<Point> getPoints(void);
-        double getXAccel(void);
-        double getYAccel(void);
-};
 
 #endif // PHYSICS_H
