@@ -63,8 +63,10 @@ int main()
     startText.setColor(sf::Color::White);
     startText.setStyle(sf::Text::Underlined);
     startText.setPosition(w/2-(startText.getGlobalBounds().width/2),(3*h/4)-(startText.getGlobalBounds().height/2));
+    bool mainScreen = true;
     //Main Screen Objects End
 //-----------------------------------------------------------------
+    reintialize:
     //Game Screen Objects Start
     int mass = 1;
     int velocity = 1;
@@ -149,9 +151,6 @@ int main()
     //Physics Engine Initialization End
 //-----------------------------------------------------------------
 
-
-
-    bool mainScreen = true;
     double fps = 60;
     double objMass;
     double objxvelo;
@@ -160,42 +159,6 @@ int main()
 	// Start the game loop
     while (app.isOpen())
     {
-            //Execute Physics Engine
-            if (world.getElapsedTime() > 1000/fps)
-            {
-                //--------Handle Rect Wall Collides----------------
-                vector<vector<string>> rwc;
-                rwc.swap(CheckRectWallCollide(world.getRe
-                    {
-                        if(rwc[i][0].compare("floor") == 0)
-                        {
-
-                        }
-                    }
-                }
-                //--------End Handle Rect Wall Collides------------
-
-                for (unsigned int i=0;i<world.getRectObjects().size();i++)
-                {
-                    objMass = world.getRectObjects()[i]->getMass();
-                    objyvelo = world.getRectObjects()[i]->getYvelocity();
-                    world.getRectObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
-                }
-
-                for (unsigned int i=0;i<world.getRectObjects().size();i++)
-                {
-                    objxvelo = world.getRectObjects()[i]->getXvelocity();
-                    objyvelo = world.getRectObjects()[i]->getYvelocity();
-
-                    world.getRectObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
-                }
-
-                world.resetClock();
-            }
-
-            //Execute Physics Engine End
-            //-----------------------------------------------------------------
-
         if (mainScreen == true) //Main Screen Display
         {
 
@@ -244,6 +207,41 @@ int main()
         }
         else //Game Screen Display
         {
+            //Execute Physics Engine
+            if (world.getElapsedTime() > 1000/fps)
+            {
+                //--------Handle Rect Wall Collides----------------
+                vector<vector<string>> rwc;
+                rwc.swap(CheckRectWallCollide(world.getRe
+                    {
+                        if(rwc[i][0].compare("floor") == 0)
+                        {
+
+                        }
+                    }
+                }
+                //--------End Handle Rect Wall Collides------------
+
+                for (unsigned int i=0;i<world.getRectObjects().size();i++)
+                {
+                    objMass = world.getRectObjects()[i]->getMass();
+                    objyvelo = world.getRectObjects()[i]->getYvelocity();
+                    world.getRectObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
+                }
+
+                for (unsigned int i=0;i<world.getRectObjects().size();i++)
+                {
+                    objxvelo = world.getRectObjects()[i]->getXvelocity();
+                    objyvelo = world.getRectObjects()[i]->getYvelocity();
+
+                    world.getRectObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
+                }
+
+                world.resetClock();
+            }
+
+            //Execute Physics Engine End
+            //-----------------------------------------------------------------
             sf::Event event;
             while (app.pollEvent(event))
             {
@@ -272,6 +270,7 @@ int main()
                         if (active(replayText.getPosition().x,replayText.getPosition().y,replayText.getLocalBounds().width,replayText.getLocalBounds().height,mousex,mousey)){
                             mainScreen = true;
                             startText.setColor(sf::Color::White);
+                            goto reintialize
                         }
                     }
                 }
