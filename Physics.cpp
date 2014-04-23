@@ -1,7 +1,6 @@
 #include "Physics.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <cmath>
 
 using namespace std;
 
