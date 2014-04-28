@@ -111,7 +111,6 @@ Wrect::Wrect(sf::RectangleShape* shape,double mass,double xvelo,double yvelo, do
 
     //p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)+getCenterY()));//botRightPoint
     p = Point(this->shape->getPosition().x+this->width,this->shape->getPosition().y+this->height);
-    cout << p.getY() << endl;
     points.push_back(p);
 
 }

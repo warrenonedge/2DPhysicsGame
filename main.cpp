@@ -46,11 +46,8 @@ void HandleRectWallCollide(vector<Wrect*> objs, sf::RectangleShape barrier, doub
 
         for(int j=0;j<4;j++)
         {
-            //cout << objs[0]->getPoints()[3].getY() << endl;
             if(objs[i]->getPoints()[j].getY() >= 603)
             {
-                cout << "collision" << endl;
-                cout << objs[2]->getPoints()[3].getY() << endl;
                 objs[i]->Move(0,603 - objs[i]->getPoints()[j].getY());
                 //double xdist = objs[i]->getCenterX() - objs[i]->getPoints()[j].getX();
                 //objs[i]->setAngVelocity(objs[i]->getAngVelocity()+xdist);
@@ -91,6 +88,7 @@ int main()
     startText.setStyle(sf::Text::Underlined);
     startText.setPosition(w/2-(startText.getGlobalBounds().width/2),(3*h/4)-(startText.getGlobalBounds().height/2));
     bool mainScreen = true;
+    int printed = 0;
     //Main Screen Objects End
 //-----------------------------------------------------------------
     reintialize:
@@ -98,7 +96,6 @@ int main()
     int mass = 1;
     int velocity = 1;
     int angle = 0;
-    int score = 0;
 
     sf::CircleShape ball((20.0/600)*h);
     ball.setPosition(87,h-100);
@@ -153,7 +150,7 @@ int main()
     level.setColor(sf::Color::White);
     level.setStyle(sf::Text::Bold);
 
-    sf::Text massText("Mass: "+number_to_string(mass),font,(w*1.0/h)*(12.0));
+    sf::Text massText("Mass: "+number_to_string(mass)+" kg",font,(w*1.0/h)*(12.0));
     massText.setColor(sf::Color::White);
     massText.setPosition(level.getPosition().x,(225/600.0)*h);
 
@@ -170,7 +167,7 @@ int main()
     replayText.setStyle(sf::Text::Underlined);
     replayText.setPosition(massText.getPosition().x,50);
 
-    sf::Text scoreText("Score: "+number_to_string(score),font,(w*1.0/h)*(72/5.0));
+    sf::Text scoreText("",font,(w*1.0/h)*(72/5.0));
     scoreText.setPosition(w/2.0-(scoreText.getLocalBounds().width/2),50);
     scoreText.setColor(sf::Color::White);
 
@@ -235,7 +232,11 @@ int main()
                         {
                             mainScreen = false;
                             replayText.setColor(sf::Color::White);
-                            printf("\n ONLY ONE KEY AT A TIME \n (, or /) \t   to -/+ Mass \n (Left or Right)   to -/+ Velocity \n (Up or Down)      to -/+ Angle(degree)");
+                            if (printed == 0)
+                            {
+                                printf("\n ONLY ONE KEY AT A TIME \n (, or /) \t   to -/+ Mass \n (Left or Right)   to -/+ Velocity \n (Up or Down)      to -/+ Angle(degree)");
+                                printed = 1;
+                            }
                         }
                     }
                 }
@@ -328,12 +329,12 @@ int main()
                     }
                     if (event.key.code == sf::Keyboard::Slash)
                     {
-                        if (mass < 50)
+                        if (mass < 10)
                         {
                             mass+=1;
                         }
                         else
-                            mass = 50;
+                            mass = 10;
                     }
                     if (event.key.code == sf::Keyboard::Left)
                     {
@@ -373,14 +374,13 @@ int main()
                             angle = 45;
                         line.rotate((-1)*angle);
                     }
-                    massText.setString("Mass: " + number_to_string(mass));
+                    massText.setString("Mass: " + number_to_string(mass)+" kg");
                     velocityText.setString("Velocity: " + number_to_string(velocity));
                     angleText.setString("Angle: " + number_to_string(angle) + "°");
                 }
             }
             app.clear();
             app.draw(level);
-            app.draw(bottom);
             app.draw(line);
             app.draw(ball);
             app.draw(rectLeft);
@@ -391,6 +391,7 @@ int main()
             app.draw(angleText);
             app.draw(replayText);
             app.draw(scoreText);
+            app.draw(bottom);
         }
         // Update the window
         app.display();
