@@ -71,6 +71,10 @@ void Wshape::setYvelocity(double newYvelo) {
     this->yvelo = newYvelo;
 }
 
+void Wshape::setAngVelocity(double newAvelo) {
+    this->avelo = newAvelo;
+}
+
 double Wshape::getXvelocity() {
     return this->xvelo;
 }
@@ -79,35 +83,45 @@ double Wshape::getYvelocity() {
     return this->yvelo;
 }
 
+double Wshape::getAngVelocity() {
+    return this->avelo;
+}
 
-Wrect::Wrect(sf::RectangleShape* shape,double mass,double xvelo,double yvelo)
+
+Wrect::Wrect(sf::RectangleShape* shape,double mass,double xvelo,double yvelo, double avelo)
 {
     this->mass = mass;
     this->xvelo = xvelo;
     this->yvelo = yvelo;
+    this->avelo = avelo;
     this->shape = shape;
-    this->width = shape->getSize().x;
-    this->height = shape->getSize().y;
-    Point p = Point(abs((this->width/2)-getCenterX()),abs((this->height/2)-getCenterY())); //topLeftPoint
-    points.push_back(&p);
+    this->width = shape->getGlobalBounds().width;
+    this->height = shape->getGlobalBounds().height;
+    //Point p = Point(abs((this->width/2)-getCenterX()),abs((this->height/2)-getCenterY()));//topLeftPoint
+    Point p = Point(this->shape->getPosition().x,this->shape->getPosition().y);
+    points.push_back(p);
 
-    p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)-getCenterY()));  //topRightPoint
-    points.push_back(&p);
+    //p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)-getCenterY()));  //topRightPoint
+    p = Point(this->shape->getPosition().x+this->width,this->shape->getPosition().y);
+    points.push_back(p);
 
-    p = Point(abs((this->width/2)-getCenterX()),abs((this->height/2)+getCenterY())); //botLeftPoint
-    points.push_back(&p);
+    //p = Point(abs((this->width/2)-getCenterX()),abs((this->height/2)+getCenterY())); //botLeftPoint
+    p = Point(this->shape->getPosition().x,this->shape->getPosition().y+this->height);
+    points.push_back(p);
 
-    p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)+getCenterY()));//botRightPoint
-    points.push_back(&p);
+    //p = Point(abs((this->width/2)+getCenterX()),abs((this->height/2)+getCenterY()));//botRightPoint
+    p = Point(this->shape->getPosition().x+this->width,this->shape->getPosition().y+this->height);
+    cout << p.getY() << endl;
+    points.push_back(p);
 
 }
 
 double Wrect::getCenterX() {
-    return this->shape->getPosition().x;
+    return this->shape->getOrigin().x;
 }
 
 double Wrect::getCenterY() {
-    return this->shape->getPosition().y;
+    return this->shape->getOrigin().y;
 }
 
 void Wrect::setPosition(double newx, double newy) {
@@ -117,10 +131,29 @@ void Wrect::setPosition(double newx, double newy) {
 void Wrect::Move(double dx,double dy) {
     for (int i=0;i<4;i++)
     {
-        this->points[i]->Move(dx,dy);
+        this->points[i].PMove(dx,dy);
     }
 
     this->shape->move(dx,dy);
+}
+
+void Wrect::Rotate(double da) {
+    this->shape->rotate(da);
+
+    double orgx;
+    double orgy;
+
+    for (int i=0;i<4;i++)
+    {
+        orgx = this->points[i].getX();
+        orgy = this->points[i].getY();
+
+        orgx = orgx*cos(this->shape->getRotation()*.017)-(orgy*sin(this->shape->getRotation()*.017));
+        orgy = orgx*sin(this->shape->getRotation()*.017)-(orgy*cos(this->shape->getRotation()*.017));
+
+        this->points[i].setX(orgx);
+        this->points[i].setY(orgy);
+    }
 }
 
 double Wrect::getWidth() {
@@ -131,7 +164,7 @@ double Wrect::getHeight() {
     return this->height;
 }
 
-vector<Point*> Wrect::getPoints() {
+vector<Point> Wrect::getPoints() {
     return this->points;
 }
 
@@ -148,7 +181,7 @@ void Point::setY(double newy) {
     this->y = newy;
 }
 
-void Point::Move(double dx,double dy) {
+void Point::PMove(double dx,double dy) {
     this->x += dx;
     this->y += dy;
 }

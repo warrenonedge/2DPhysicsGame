@@ -14,7 +14,7 @@ class Point {
         double getX(void);
         double getY(void);
 
-        void Move(double,double);
+        void PMove(double,double);
 
         void setX(double);
         void setY(double);
@@ -23,35 +23,38 @@ class Point {
 
 class Wshape {
     protected:
-        double mass,xvelo,yvelo;
+        double mass,xvelo,yvelo,avelo;
 
     public:
         void setMass(double);
         void setXvelocity(double);
         void setYvelocity(double);
+        void setAngVelocity(double);
 
         double getMass(void);
         double getXvelocity(void);
         double getYvelocity(void);
+        double getAngVelocity(void);
 };
 
 class Wrect : public Wshape {
     private:
         sf::RectangleShape* shape;
-        vector<Point*> points;
+        vector<Point> points;
         double width, height;
 
     public:
-        Wrect(sf::RectangleShape*,double,double,double);
+        Wrect(sf::RectangleShape*,double,double,double,double);
 
         void setPosition(double,double);
         void Move(double,double);
+        void Rotate(double);
 
         double getCenterX(void);
         double getCenterY(void);
         double getWidth(void);
         double getHeight(void);
-        vector<Point*> getPoints(void);
+        vector<Point> getPoints(void);
 
 };
 

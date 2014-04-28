@@ -8,30 +8,57 @@
 using namespace std;
 
 //------Extra Functions--------------
-vector<vector<string>> CheckRectWallCollide(vector<Wrect*> objs, Wrect* barrier)
+//vector<vector<string>> CheckRectWallCollide(vector<Wrect*> objs, Wrect* barrier)
+//{
+//    vector<vector<string>> allCollides;
+//    vector<string> objCollides;
+//
+//    for(unsigned int i=0;i<objs.size();i++)
+//    {
+//        for(int j=0;j<4;j++)
+//        {
+//            if(objs[i]->getPoints()[j]->getY() >= barrier->getPoints()[0]->getY())
+//            {
+//                objCollides.push_back("floor");
+//            }
+//            else
+//            {
+//                objCollides.push_back("none");
+//            }
+//
+//            allCollides.push_back(objCollides);
+//            objCollides.clear();
+//        }
+//    }
+//
+//    return allCollides;
+// }
+
+void HandleRectWallCollide(vector<Wrect*> objs, sf::RectangleShape barrier, double winh)
 {
-    vector<vector<string>> allCollides;
-    vector<string> objCollides;
+    double objxvel;
+    double objyvel;
+    double objavel;
+    double objmass;
 
     for(unsigned int i=0;i<objs.size();i++)
     {
+
         for(int j=0;j<4;j++)
         {
-            if(objs[i]->getPoints()[j]->getY() >= barrier->getPoints()[0]->getY())
+            //cout << objs[0]->getPoints()[3].getY() << endl;
+            if(objs[i]->getPoints()[j].getY() >= 603)
             {
-                objCollides.push_back("floor");
+                cout << "collision" << endl;
+                cout << objs[2]->getPoints()[3].getY() << endl;
+                objs[i]->Move(0,603 - objs[i]->getPoints()[j].getY());
+                //double xdist = objs[i]->getCenterX() - objs[i]->getPoints()[j].getX();
+                //objs[i]->setAngVelocity(objs[i]->getAngVelocity()+xdist);
+                //objs[i]->setXvelocity(objs[i]->getXvelocity()+(xdist/4));
+                objs[i]->setYvelocity(-1.0*(objs[i]->getYvelocity())/1.1);
             }
-            else
-            {
-                objCollides.push_back("none");
-            }
-
-            allCollides.push_back(objCollides);
-            objCollides.clear();
         }
     }
-
-    return allCollides;
 }
 
 //------Extra Functions End----------
@@ -95,16 +122,31 @@ int main()
     rectLeft.setPosition(2.5*w/4,2.75*h/4);
     rectLeft.setSize(sf::Vector2f(50,(ball.getPosition().y+(ball.getRadius()*2)-rectLeft.getPosition().y)));
     rectLeft.setFillColor(sf::Color::Blue);
+    double x = rectLeft.getGlobalBounds().width/2;
+    double y = rectLeft.getGlobalBounds().height/2;
+    rectLeft.setOrigin(x,y);
+    rectLeft.move(x,y);
 
     sf::RectangleShape rectRight;
-    rectRight.setPosition(rectLeft.getPosition().x+125,rectLeft.getPosition().y);
-    rectRight.setSize(rectLeft.getSize());
+    rectRight.setPosition(2.5*w/4+125,2.75*h/4);
+    rectRight.setSize(sf::Vector2f(50,(ball.getPosition().y+(ball.getRadius()*2)-rectRight.getPosition().y)));
     rectRight.setFillColor(sf::Color::Blue);
+    x = rectRight.getGlobalBounds().width/2;
+    y = rectRight.getGlobalBounds().height/2;
+    rectRight.setOrigin(x,y);
+    rectRight.move(x,y);
+    //rectRight.move(x,y);
 
     sf::RectangleShape rectTop;
-    rectTop.setPosition(rectLeft.getPosition().x,rectLeft.getPosition().y-rectLeft.getSize().x);
-    rectTop.setSize(sf::Vector2f((3.0/2*rectLeft.getSize().x)+(2*rectLeft.getGlobalBounds().width),rectLeft.getSize().x));
+    rectTop.setPosition(2.5*w/4,2.75*h/4);
+    rectTop.setSize(sf::Vector2f(50,(ball.getPosition().y+(ball.getRadius()*2)-rectTop.getPosition().y)));
     rectTop.setFillColor(sf::Color::Green);
+    x = rectTop.getGlobalBounds().width/2;
+    y = rectTop.getGlobalBounds().height/2;
+    rectTop.setOrigin(x,y);
+    rectTop.move(x,y);
+    //rectTop.rotate(90);
+    rectTop.move(rectLeft.getGlobalBounds().width+10,-150);
 
     sf::Text level("Level 1",font,(w*1.0/h)*(72/5.0));
     level.setPosition(10,0);
@@ -137,16 +179,16 @@ int main()
     //Physics Engine initialization
 
     World world = World(w,h,10);
-    Wrect barrier = Wrect(&bottom,100,0,0);
 
-    Wrect rectL = Wrect(&rectLeft,.011,0,0);
+    Wrect rectL = Wrect(&rectLeft,1.3,0,-1000,0);
     world.addRectObject(&rectL);
 
-    Wrect rectR = Wrect(&rectRight,.012,0,0);
+    Wrect rectR = Wrect(&rectRight,2.5,0,-1000,0);
     world.addRectObject(&rectR);
 
-    Wrect rectT = Wrect(&rectTop,.0134,0,0);
+    Wrect rectT = Wrect(&rectTop,3.1,0,-1000,0);
     world.addRectObject(&rectT);
+    //world.getRectObjects()[1]->getPoints()[3]->setY(10);
 
     //Physics Engine Initialization End
 //-----------------------------------------------------------------
@@ -155,6 +197,7 @@ int main()
     double objMass;
     double objxvelo;
     double objyvelo;
+    double objavelo;
 
 	// Start the game loop
     while (app.isOpen())
@@ -211,15 +254,7 @@ int main()
             if (world.getElapsedTime() > 1000/fps)
             {
                 //--------Handle Rect Wall Collides----------------
-                vector<vector<string>> rwc;
-                rwc.swap(CheckRectWallCollide(world.getRe
-                    {
-                        if(rwc[i][0].compare("floor") == 0)
-                        {
-
-                        }
-                    }
-                }
+                HandleRectWallCollide(world.getRectObjects(),bottom, world.getHeight());
                 //--------End Handle Rect Wall Collides------------
 
                 for (unsigned int i=0;i<world.getRectObjects().size();i++)
@@ -227,14 +262,22 @@ int main()
                     objMass = world.getRectObjects()[i]->getMass();
                     objyvelo = world.getRectObjects()[i]->getYvelocity();
                     world.getRectObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
+
+                    objxvelo = world.getRectObjects()[i]->getXvelocity();
+                    world.getRectObjects()[i]->setXvelocity(objxvelo*objMass);
+
+                    //objavelo = world.getRectObjects()[i]->getAngVelocity();
+                    //world.getRectObjects()[i]->setAngVelocity(objavelo*objMass);
                 }
 
                 for (unsigned int i=0;i<world.getRectObjects().size();i++)
                 {
                     objxvelo = world.getRectObjects()[i]->getXvelocity();
                     objyvelo = world.getRectObjects()[i]->getYvelocity();
+                    //objavelo = world.getRectObjects()[i]->getAngVelocity();
 
                     world.getRectObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
+                    //world.getRectObjects()[i]->Rotate(objavelo/fps);
                 }
 
                 world.resetClock();
@@ -270,7 +313,7 @@ int main()
                         if (active(replayText.getPosition().x,replayText.getPosition().y,replayText.getLocalBounds().width,replayText.getLocalBounds().height,mousex,mousey)){
                             mainScreen = true;
                             startText.setColor(sf::Color::White);
-                            goto reintialize
+                            goto reintialize;
                         }
                     }
                 }
