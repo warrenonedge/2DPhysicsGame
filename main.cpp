@@ -91,7 +91,6 @@ void HandleBallRectCollide(vector<Wrect*> Robjs, vector<Wball*> Bobjs) {
             Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getX() <= 0 &&
             Bobjs[0]->getCenterY()>= Robjs[i]->getPoints()[0].getY() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[2].getY())
         {
-            cout << "X collision" << endl;
             double BobjXvelo = Bobjs[0]->getXvelocity();
             double RobjsXvelo = Robjs[i]->getXvelocity();
             Robjs[i]->setXvelocity(BobjXvelo);
@@ -104,7 +103,6 @@ void HandleBallRectCollide(vector<Wrect*> Robjs, vector<Wball*> Bobjs) {
             Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getX() >= 0 &&
             Bobjs[0]->getCenterY()>= Robjs[i]->getPoints()[0].getY() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[2].getY())
         {
-            cout << "X collision" << endl;
             double BobjXvelo = Bobjs[0]->getXvelocity();
             double RobjsXvelo = Robjs[i]->getXvelocity();
             Robjs[i]->setXvelocity(BobjXvelo);
@@ -117,7 +115,6 @@ void HandleBallRectCollide(vector<Wrect*> Robjs, vector<Wball*> Bobjs) {
            Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getY() <=0 &&
            Bobjs[0]->getCenterX()>= Robjs[i]->getPoints()[0].getX() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[1].getX())
         {
-            cout << "Y collision" << endl;
             double BobjYvelo = Bobjs[0]->getYvelocity();
             double RobjsYvelo = Robjs[i]->getYvelocity();
             Robjs[i]->setYvelocity(BobjYvelo);
@@ -130,7 +127,6 @@ void HandleBallRectCollide(vector<Wrect*> Robjs, vector<Wball*> Bobjs) {
            Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getY() >=0 &&
            Bobjs[0]->getCenterX()>= Robjs[i]->getPoints()[0].getX() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[1].getX())
         {
-            cout << "Y collision" << endl;
             double BobjYvelo = Bobjs[0]->getYvelocity();
             double RobjsYvelo = Robjs[i]->getYvelocity();
             Robjs[i]->setYvelocity(BobjYvelo);
@@ -296,7 +292,7 @@ int main()
                             replayText.setColor(sf::Color::White);
                             if (printed == 0)
                             {
-                                printf("\n ONLY ONE KEY AT A TIME \n (, or /) \t   to -/+ Mass \n (Left or Right)   to -/+ Velocity \n (Up or Down)      to -/+ Angle(degree)");
+                                printf("\n Objective: Shoot the ball and knock the \n\t    rectangle off the screen \nONLY ONE KEY AT A TIME \n (, or /) \t   to -/+ Mass \n (Left or Right)   to -/+ Velocity \n (Up or Down)      to -/+ Angle(degree)\n (Space)           to Shoot\n (R)               to Reset\n");
                                 printed = 1;
                             }
                         }
@@ -481,6 +477,7 @@ int main()
                     if (event.key.code == sf::Keyboard::R)
                     {
                         mainScreen == false;
+                        ballrect = 0;
                         goto reintialize;
                     }
                     massText.setString("Mass: " + number_to_string(mass)+" kg");
@@ -491,7 +488,6 @@ int main()
             if (rectLeft.getPosition().x > w)
                 scoreText.setString("You Win");
             app.clear();
-            app.draw(level);
             app.draw(line);
             app.draw(ball);
             app.draw(rectLeft);
@@ -501,6 +497,7 @@ int main()
             app.draw(replayText);
             app.draw(scoreText);
             app.draw(bottom);
+            app.draw(level);
         }
         // Update the window
         app.display();
