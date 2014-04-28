@@ -27,8 +27,16 @@ void World::addRectObject(Wrect* newobject) {
     this->rectObjects.push_back(newobject);
 }
 
+void World::addBallObject(Wball* newobject) {
+    this->ballObjects.push_back(newobject);
+}
+
 vector<Wrect*> World::getRectObjects() {
     return this->rectObjects;
+}
+
+vector<Wball*> World::getBallObjects() {
+    return this->ballObjects;
 }
 
 void World::setWidth(double w) {
@@ -166,6 +174,32 @@ double Wrect::getHeight() {
 vector<Point> Wrect::getPoints() {
     return this->points;
 }
+
+Wball::Wball(sf::CircleShape* shape,double mass, double xvelo, double yvelo) {
+    this->shape = shape;
+    this->mass = mass;
+    this->xvelo = xvelo;
+    this->yvelo = yvelo;
+}
+
+void Wball::Move(double dx, double dy) {
+    this->shape->move(dx,dy);
+}
+
+double Wball::getRadius() {
+    return this->shape->getRadius();
+}
+
+double Wball::getCenterX() {
+    return this->shape->getPosition().x + this->shape->getRadius();
+}
+
+double Wball::getCenterY() {
+    return this->shape->getPosition().y + this->shape->getRadius();
+}
+
+
+
 
 Point::Point(double x,double y) {
     this->x = x;

@@ -34,7 +34,7 @@ using namespace std;
 //    return allCollides;
 // }
 
-void HandleRectWallCollide(vector<Wrect*> objs, sf::RectangleShape barrier, double winh)
+void HandleRectWallCollide(vector<Wrect*> objs, double winh)
 {
     double objxvel;
     double objyvel;
@@ -46,9 +46,9 @@ void HandleRectWallCollide(vector<Wrect*> objs, sf::RectangleShape barrier, doub
 
         for(int j=0;j<4;j++)
         {
-            if(objs[i]->getPoints()[j].getY() >= 603)
+            if(objs[i]->getPoints()[j].getY() >= 3+winh)
             {
-                objs[i]->Move(0,603 - objs[i]->getPoints()[j].getY());
+                objs[i]->Move(0,winh+3 - objs[i]->getPoints()[j].getY());
                 //double xdist = objs[i]->getCenterX() - objs[i]->getPoints()[j].getX();
                 //objs[i]->setAngVelocity(objs[i]->getAngVelocity()+xdist);
                 //objs[i]->setXvelocity(objs[i]->getXvelocity()+(xdist/4));
@@ -56,6 +56,50 @@ void HandleRectWallCollide(vector<Wrect*> objs, sf::RectangleShape barrier, doub
             }
         }
     }
+}
+
+void HandleBallWallCollide(vector<Wball*> objs, double barrierY)
+{
+    double objxvel;
+    double objyvel;
+    double objavel;
+    double objmass;
+
+    for(unsigned int i=0;i<objs.size();i++)
+    {
+        if(objs[i]->getCenterY()+objs[i]->getRadius() >= barrierY)
+        {
+            objs[i]->Move(0,barrierY - objs[i]->getCenterY()-objs[i]->getRadius());
+            objs[i]->setYvelocity(-1.0*(objs[i]->getYvelocity())/1.1);
+        }
+    }
+}
+
+void HandleBallRectCollide(vector<Wrect*> Robjs, vector<Wball*> Bobjs) {
+
+    for(unsigned i=0;i<Robjs.size();i++)
+    {
+        if (Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getX() >= 0 &&
+            )
+        {
+            cout << "X collision" << endl;
+            double BobjXvelo = Bobjs[0]->getXvelocity();
+            double RobjsXvelo = Robjs[i]->getXvelocity();
+            Robjs[i]->setXvelocity(BobjXvelo);
+            Bobjs[0]->setXvelocity(RobjsXvelo);
+        }
+
+        if(Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getY() >=0)
+        {
+            cout << "Y collision" << endl;
+            double BobjYvelo = Bobjs[0]->getYvelocity();
+            double RobjsYvelo = Robjs[i]->getYvelocity();
+            Robjs[i]->setYvelocity(BobjYvelo);
+            Bobjs[0]->setYvelocity(RobjsYvelo);
+        }
+    }
+
+
 }
 
 //------Extra Functions End----------
@@ -185,6 +229,9 @@ int main()
 
     Wrect rectT = Wrect(&rectTop,3.1,0,-1000,0);
     world.addRectObject(&rectT);
+
+    Wball Lball = Wball(&ball,2,600,-1000);
+    world.addBallObject(&Lball);
     //world.getRectObjects()[1]->getPoints()[3]->setY(10);
 
     //Physics Engine Initialization End
@@ -255,7 +302,9 @@ int main()
             if (world.getElapsedTime() > 1000/fps)
             {
                 //--------Handle Rect Wall Collides----------------
-                HandleRectWallCollide(world.getRectObjects(),bottom, world.getHeight());
+                HandleRectWallCollide(world.getRectObjects(), world.getHeight());
+                HandleBallWallCollide(world.getBallObjects(),bottom.getPosition().y);
+                HandleBallRectCollide(world.getRectObjects(),world.getBallObjects());
                 //--------End Handle Rect Wall Collides------------
 
                 for (unsigned int i=0;i<world.getRectObjects().size();i++)
@@ -265,10 +314,37 @@ int main()
                     world.getRectObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
 
                     objxvelo = world.getRectObjects()[i]->getXvelocity();
-                    world.getRectObjects()[i]->setXvelocity(objxvelo*objMass);
+                    if (objxvelo < 0)
+                        world.getRectObjects()[i]->setXvelocity(objxvelo+abs(objxvelo*objMass*.012)/objMass);
+                    else if (objxvelo > 0)
+                        world.getRectObjects()[i]->setXvelocity(objxvelo-abs(objxvelo*objMass*.012)/objMass);
 
                     //objavelo = world.getRectObjects()[i]->getAngVelocity();
                     //world.getRectObjects()[i]->setAngVelocity(objavelo*objMass);
+                }
+
+                for (unsigned int i=0;i<world.getBallObjects().size();i++)
+                {
+                    objMass = world.getBallObjects()[i]->getMass();
+                    objyvelo = world.getBallObjects()[i]->getYvelocity();
+                    world.getBallObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
+
+                    objxvelo = world.getBallObjects()[i]->getXvelocity();
+                    if (objxvelo < 0)
+                        world.getBallObjects()[i]->setXvelocity(objxvelo+abs(objxvelo*objMass*.012)/objMass);
+                    else if (objxvelo > 0)
+                        world.getBallObjects()[i]->setXvelocity(objxvelo-abs(objxvelo*objMass*.012)/objMass);
+
+                    //objavelo = world.getRectObjects()[i]->getAngVelocity();
+                    //world.getRectObjects()[i]->setAngVelocity(objavelo*objMass);
+                }
+
+                for (unsigned int i=0;i<world.getBallObjects().size();i++)
+                {
+                    objxvelo = world.getBallObjects()[i]->getXvelocity();
+                    objyvelo = world.getBallObjects()[i]->getYvelocity();
+
+                    world.getBallObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
                 }
 
                 for (unsigned int i=0;i<world.getRectObjects().size();i++)

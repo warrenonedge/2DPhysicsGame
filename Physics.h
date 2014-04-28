@@ -58,12 +58,27 @@ class Wrect : public Wshape {
 
 };
 
+class Wball : public Wshape {
+    private:
+        sf::CircleShape* shape;
+
+    public:
+        Wball(sf::CircleShape*,double,double,double);
+
+        void Move(double,double);
+
+        double getCenterX(void);
+        double getCenterY(void);
+        double getRadius();
+
+};
 
 class World {
     private:
         double width,height,gforce;
         sf::Clock clock;
         vector<Wrect*> rectObjects;
+        vector<Wball*> ballObjects;
 
     public:
         World(double,double,double);
@@ -74,7 +89,9 @@ class World {
 
         int getElapsedTime(void);
         void addRectObject(Wrect*);
+        void addBallObject(Wball*);
         vector<Wrect*> getRectObjects(void);
+        vector<Wball*> getBallObjects(void);
 
         double getWidth(void);
         double getHeight(void);
