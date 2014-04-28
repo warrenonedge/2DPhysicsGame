@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 #include "Physics.h"
 
 using namespace std;
@@ -33,6 +34,7 @@ using namespace std;
 //
 //    return allCollides;
 // }
+int ballrect = 0;
 
 void HandleRectWallCollide(vector<Wrect*> objs, double winh)
 {
@@ -52,7 +54,13 @@ void HandleRectWallCollide(vector<Wrect*> objs, double winh)
                 //double xdist = objs[i]->getCenterX() - objs[i]->getPoints()[j].getX();
                 //objs[i]->setAngVelocity(objs[i]->getAngVelocity()+xdist);
                 //objs[i]->setXvelocity(objs[i]->getXvelocity()+(xdist/4));
-                objs[i]->setYvelocity(-1.0*(objs[i]->getYvelocity())/1.1);
+                if (ballrect == 1)
+                    if (objs[i]->getYvelocity()>0)
+                        objs[i]->setYvelocity(-1.0*(objs[i]->getYvelocity())/1.1);
+                    else
+                        objs[i]->setYvelocity((objs[i]->getYvelocity())/1.1);
+                else
+                    objs[i]->setYvelocity(-775);
             }
         }
     }
@@ -80,22 +88,55 @@ void HandleBallRectCollide(vector<Wrect*> Robjs, vector<Wball*> Bobjs) {
     for(unsigned i=0;i<Robjs.size();i++)
     {
         if (Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getX() >= 0 &&
-            )
+            Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getX() <= 0 &&
+            Bobjs[0]->getCenterY()>= Robjs[i]->getPoints()[0].getY() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[2].getY())
         {
             cout << "X collision" << endl;
             double BobjXvelo = Bobjs[0]->getXvelocity();
             double RobjsXvelo = Robjs[i]->getXvelocity();
             Robjs[i]->setXvelocity(BobjXvelo);
-            Bobjs[0]->setXvelocity(RobjsXvelo);
+            //Bobjs[0]->setXvelocity(RobjsXvelo);
+            Bobjs[0]->setXvelocity((-1.0)*BobjXvelo);
+            ballrect = 1;
         }
 
-        if(Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getY() >=0)
+        if (Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getX() <= 0 &&
+            Bobjs[0]->getCenterX()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getX() >= 0 &&
+            Bobjs[0]->getCenterY()>= Robjs[i]->getPoints()[0].getY() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[2].getY())
+        {
+            cout << "X collision" << endl;
+            double BobjXvelo = Bobjs[0]->getXvelocity();
+            double RobjsXvelo = Robjs[i]->getXvelocity();
+            Robjs[i]->setXvelocity(BobjXvelo);
+            //Bobjs[0]->setXvelocity(RobjsXvelo);
+            Bobjs[0]->setXvelocity((-1.0)*BobjXvelo);
+            ballrect = 1;
+        }
+
+        if(Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getY() >=0 &&
+           Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getY() <=0 &&
+           Bobjs[0]->getCenterX()>= Robjs[i]->getPoints()[0].getX() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[1].getX())
         {
             cout << "Y collision" << endl;
             double BobjYvelo = Bobjs[0]->getYvelocity();
             double RobjsYvelo = Robjs[i]->getYvelocity();
             Robjs[i]->setYvelocity(BobjYvelo);
             Bobjs[0]->setYvelocity(RobjsYvelo);
+            //Bobjs[0]->setXvelocity((-1.0/3)*BobjYvelo);
+            ballrect = 1;
+        }
+
+        if(Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[0].getY() <=0 &&
+           Bobjs[0]->getCenterY()+Bobjs[0]->getRadius() - Robjs[i]->getPoints()[1].getY() >=0 &&
+           Bobjs[0]->getCenterX()>= Robjs[i]->getPoints()[0].getX() && Bobjs[0]->getCenterY() <= Robjs[i]->getPoints()[1].getX())
+        {
+            cout << "Y collision" << endl;
+            double BobjYvelo = Bobjs[0]->getYvelocity();
+            double RobjsYvelo = Robjs[i]->getYvelocity();
+            Robjs[i]->setYvelocity(BobjYvelo);
+            Bobjs[0]->setYvelocity(RobjsYvelo);
+            //Bobjs[0]->setXvelocity((-1.0/3)*BobjYvelo);
+            ballrect = 1;
         }
     }
 
@@ -137,8 +178,9 @@ int main()
 //-----------------------------------------------------------------
     reintialize:
     //Game Screen Objects Start
+    int launched,space = 0;
     int mass = 1;
-    int velocity = 1;
+    int velocity = 50;
     int angle = 0;
 
     sf::CircleShape ball((20.0/600)*h);
@@ -149,7 +191,7 @@ int main()
     line.setPosition(ball.getPosition().x+ball.getRadius(),ball.getPosition().y+ball.getRadius());
     line.setOutlineThickness(0);
     line.setOutlineColor(sf::Color::White);
-    line.setSize(sf::Vector2f(100,1));
+    line.setSize(sf::Vector2f(velocity,1));
     line.setFillColor(sf::Color::White);
 
     sf::RectangleShape bottom;
@@ -167,27 +209,6 @@ int main()
     double y = rectLeft.getGlobalBounds().height/2;
     rectLeft.setOrigin(x,y);
     rectLeft.move(x,y);
-
-    sf::RectangleShape rectRight;
-    rectRight.setPosition(2.5*w/4+125,2.75*h/4);
-    rectRight.setSize(sf::Vector2f(50,(ball.getPosition().y+(ball.getRadius()*2)-rectRight.getPosition().y)));
-    rectRight.setFillColor(sf::Color::Blue);
-    x = rectRight.getGlobalBounds().width/2;
-    y = rectRight.getGlobalBounds().height/2;
-    rectRight.setOrigin(x,y);
-    rectRight.move(x,y);
-    //rectRight.move(x,y);
-
-    sf::RectangleShape rectTop;
-    rectTop.setPosition(2.5*w/4,2.75*h/4);
-    rectTop.setSize(sf::Vector2f(50,(ball.getPosition().y+(ball.getRadius()*2)-rectTop.getPosition().y)));
-    rectTop.setFillColor(sf::Color::Green);
-    x = rectTop.getGlobalBounds().width/2;
-    y = rectTop.getGlobalBounds().height/2;
-    rectTop.setOrigin(x,y);
-    rectTop.move(x,y);
-    //rectTop.rotate(90);
-    rectTop.move(rectLeft.getGlobalBounds().width+10,-150);
 
     sf::Text level("Level 1",font,(w*1.0/h)*(72/5.0));
     level.setPosition(10,0);
@@ -211,8 +232,8 @@ int main()
     replayText.setStyle(sf::Text::Underlined);
     replayText.setPosition(massText.getPosition().x,50);
 
-    sf::Text scoreText("",font,(w*1.0/h)*(72/5.0));
-    scoreText.setPosition(w/2.0-(scoreText.getLocalBounds().width/2),50);
+    sf::Text scoreText("",font,50);
+    scoreText.setPosition(w/2.0-(scoreText.getLocalBounds().width/2.0),h/2-(scoreText.getLocalBounds().height/2));
     scoreText.setColor(sf::Color::White);
 
     //Game Screen Objects End
@@ -221,16 +242,10 @@ int main()
 
     World world = World(w,h,10);
 
-    Wrect rectL = Wrect(&rectLeft,1.3,0,-1000,0);
+    Wrect rectL = Wrect(&rectLeft,1.3,0,-775,0);
     world.addRectObject(&rectL);
 
-    Wrect rectR = Wrect(&rectRight,2.5,0,-1000,0);
-    world.addRectObject(&rectR);
-
-    Wrect rectT = Wrect(&rectTop,3.1,0,-1000,0);
-    world.addRectObject(&rectT);
-
-    Wball Lball = Wball(&ball,2,600,-1000);
+    Wball Lball = Wball(&ball,0.1,0,0);
     world.addBallObject(&Lball);
     //world.getRectObjects()[1]->getPoints()[3]->setY(10);
 
@@ -322,31 +337,32 @@ int main()
                     //objavelo = world.getRectObjects()[i]->getAngVelocity();
                     //world.getRectObjects()[i]->setAngVelocity(objavelo*objMass);
                 }
-
-                for (unsigned int i=0;i<world.getBallObjects().size();i++)
+                if (launched == 1)
                 {
-                    objMass = world.getBallObjects()[i]->getMass();
-                    objyvelo = world.getBallObjects()[i]->getYvelocity();
-                    world.getBallObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
+                    for (unsigned int i=0; i<world.getBallObjects().size(); i++)
+                    {
+                        objMass = world.getBallObjects()[i]->getMass();
+                        objyvelo = world.getBallObjects()[i]->getYvelocity();
+                        world.getBallObjects()[i]->setYvelocity(objyvelo+(world.getGforce()*objMass));
 
-                    objxvelo = world.getBallObjects()[i]->getXvelocity();
-                    if (objxvelo < 0)
-                        world.getBallObjects()[i]->setXvelocity(objxvelo+abs(objxvelo*objMass*.012)/objMass);
-                    else if (objxvelo > 0)
-                        world.getBallObjects()[i]->setXvelocity(objxvelo-abs(objxvelo*objMass*.012)/objMass);
+                        objxvelo = world.getBallObjects()[i]->getXvelocity();
+                        if (objxvelo < 0)
+                            world.getBallObjects()[i]->setXvelocity(objxvelo+abs(objxvelo*objMass*.012)/objMass);
+                        else if (objxvelo > 0)
+                            world.getBallObjects()[i]->setXvelocity(objxvelo-abs(objxvelo*objMass*.012)/objMass);
 
-                    //objavelo = world.getRectObjects()[i]->getAngVelocity();
-                    //world.getRectObjects()[i]->setAngVelocity(objavelo*objMass);
+                        //objavelo = world.getRectObjects()[i]->getAngVelocity();
+                        //world.getRectObjects()[i]->setAngVelocity(objavelo*objMass);
+                    }
+
+                    for (unsigned int i=0; i<world.getBallObjects().size(); i++)
+                    {
+                        objxvelo = world.getBallObjects()[i]->getXvelocity();
+                        objyvelo = world.getBallObjects()[i]->getYvelocity();
+
+                        world.getBallObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
+                    }
                 }
-
-                for (unsigned int i=0;i<world.getBallObjects().size();i++)
-                {
-                    objxvelo = world.getBallObjects()[i]->getXvelocity();
-                    objyvelo = world.getBallObjects()[i]->getYvelocity();
-
-                    world.getBallObjects()[i]->Move(objxvelo/fps,objyvelo/fps);
-                }
-
                 for (unsigned int i=0;i<world.getRectObjects().size();i++)
                 {
                     objxvelo = world.getRectObjects()[i]->getXvelocity();
@@ -414,21 +430,21 @@ int main()
                     }
                     if (event.key.code == sf::Keyboard::Left)
                     {
-                        if (velocity > 1)
+                        if (velocity > 50)
                             velocity-=1;
                         else
-                            velocity = 1;
-                        line.setSize(sf::Vector2f(100+velocity,1));
+                            velocity = 50;
+                        line.setSize(sf::Vector2f(velocity,1));
                     }
                     if (event.key.code == sf::Keyboard::Right)
                     {
-                        if (velocity < 50)
+                        if (velocity < 100)
                         {
                             velocity+=1;
                         }
                         else
-                            velocity = 50;
-                        line.setSize(sf::Vector2f(100+velocity,1));
+                            velocity = 100;
+                        line.setSize(sf::Vector2f(velocity,1));
                     }
                     if (event.key.code == sf::Keyboard::Down)
                     {
@@ -450,18 +466,35 @@ int main()
                             angle = 45;
                         line.rotate((-1)*angle);
                     }
+                    if (event.key.code == sf::Keyboard::Space)
+                    {
+                        if (space == 0)
+                        {
+                            launched = 1;
+                            world.getBallObjects()[0]->setMass(mass/10.0);
+                            world.getBallObjects()[0]->setXvelocity(cos(angle*(3.14/180))*(velocity*10));
+                            world.getBallObjects()[0]->setYvelocity(sin(angle*(3.14/180) )*(velocity*10));
+                            line.setFillColor(sf::Color::Black);
+                            space = 1;
+                        }
+                    }
+                    if (event.key.code == sf::Keyboard::R)
+                    {
+                        mainScreen == false;
+                        goto reintialize;
+                    }
                     massText.setString("Mass: " + number_to_string(mass)+" kg");
                     velocityText.setString("Velocity: " + number_to_string(velocity));
                     angleText.setString("Angle: " + number_to_string(angle) + "°");
                 }
             }
+            if (rectLeft.getPosition().x > w)
+                scoreText.setString("You Win");
             app.clear();
             app.draw(level);
             app.draw(line);
             app.draw(ball);
             app.draw(rectLeft);
-            app.draw(rectRight);
-            app.draw(rectTop);
             app.draw(massText);
             app.draw(velocityText);
             app.draw(angleText);
